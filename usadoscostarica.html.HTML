@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uautos Costa Rica - Página de Venta de Autos Usados</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+  <script src="https://js.stripe.com/v3/"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px 0;
+      text-align: center;
+    }
+    .container {
+      width: 80%;
+      margin: 0 auto;
+    }
+    .filter-section, .payment-section, .security-section, .reviews-section, .moderation-section, .chat-section {
+      margin: 20px 0;
+      background-color: white;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .filter-section h2, .payment-section h2, .security-section h2, .reviews-section h2, .moderation-section h2, .chat-section h2 {
+      margin-bottom: 20px;
+    }
+    .input-group {
+      margin-bottom: 10px;
+    }
+    .input-group label {
+      display: block;
+      font-size: 14px;
+    }
+    .input-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .btn {
+      background-color: #00bcd4;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background-color: #0097a7;
+    }
+    .payment-form {
+      margin-top: 20px;
+    }
+    #card-element {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .error-message {
+      color: red;
+      margin-top: 10px;
+    }
+    .review-item {
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <h1>Uautos Costa Rica - Página de Venta de Autos Usados</h1>
+  </header>
+
+  <div class="container">
+
+    <!-- Filtros de búsqueda -->
+    <section class="filter-section">
+      <h2>Filtrar Autos</h2>
+      <form id="filter-form">
+        <div class="input-group">
+          <label for="brand">Marca:</label>
+          <input type="text" id="brand" placeholder="Ejemplo: Toyota">
+        </div>
+        <div class="input-group">
+          <label for="model">Modelo:</label>
+          <input type="text" id="model" placeholder="Ejemplo: Corolla">
+        </div>
+        <div class="input-group">
+          <label for="price">Precio máximo:</label>
+          <input type="number" id="price" placeholder="Ejemplo: 20000">
+        </div>
+        <button type="submit" class="btn">Buscar Autos</button>
+      </form>
+    </section>
+
+    <!-- Sección de Pago para Anuncios Premium -->
+    <section class="payment-section">
+      <h2>Paga por un Anuncio Premium</h2>
+      <form id="payment-form" class="payment-form">
+        <div id="card-element"></div>
+        <button id="submit" class="btn">Pagar Anuncio Premium</button>
+        <div id="error-message" class="error-message"></div>
+      </form>
+    </section>
+
+    <!-- Sección de Seguridad -->
+    <section class="security-section">
+      <h2>Consejos para Evitar Estafas</h2>
+      <ul>
+        <li>No compartas información personal sensible.</li>
+        <li>Asegúrate de que el auto esté en buen estado antes de comprar.</li>
+        <li>Verifica la identidad del vendedor.</li>
+      </ul>
+    </section>
+
+    <!-- Sección de Reseñas -->
+    <section class="reviews-section">
+      <h2>Reseñas de Vendedores</h2>
+      <div id="reviews">
+        <div class="review-item">
+          <strong>Juan Pérez:</strong> "Excelente vendedor, el auto está en perfecto estado. 5 estrellas."
+        </div>
+        <div class="review-item">
+          <strong>Ana Gómez:</strong> "La compra fue fácil y segura. Recomendado."
+        </div>
+      </div>
+      <button class="btn">Deja tu Reseña</button>
+    </section>
+
+    <!-- Moderación de Anuncios -->
+    <section class="moderation-section">
+      <h2>Moderación de Anuncios</h2>
+      <p>Los anuncios serán revisados por nuestro equipo antes de ser publicados para garantizar que no haya fraudes.</p>
+    </section>
+
+    <!-- Chat Interno -->
+    <section class="chat-section">
+      <h2>Chat Interno Seguro</h2>
+      <div id="chat-box">
+        <p><strong>Juan Pérez:</strong> ¿A qué hora te gustaría ver el auto?</p>
+        <p><strong>Ana Gómez:</strong> ¿Puedes el lunes por la tarde?</p>
+      </div>
+      <input type="text" id="chat-input" placeholder="Escribe un mensaje...">
+      <button class="btn" id="send-message">Enviar</button>
+    </section>
+
+  </div>
+
+  <script>
+    // Configuración de Stripe
+    const stripe = Stripe('tu_clave_publica_de_stripe'); // Reemplaza con tu clave pública de Stripe
+    const elements = stripe.elements();
+    const card = elements.create('card');
+    card.mount('#card-element');
+
+    // Manejo de formulario de pago
+    const form = document.getElementById('payment-form');
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      // Obtener el monto del pago para el anuncio premium
+      const amount = 1999;  // $19.99 en centavos
+
+      // Llamar al backend para crear un PaymentIntent
+      const res = await fetch('/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount })
+      });
+      const { clientSecret } = await res.json();
+
+      // Completar el pago con el clientSecret
+      const { error } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: card,
+          billing_details: { name: 'Nombre del Comprador' }
+        }
+      });
+
+      if (error) {
+        document.getElementById('error-message').textContent = error.message;
+      } else {
+        alert('Pago realizado con éxito. Tu anuncio será premium.');
+      }
+    });
+
+    // Filtrar autos (función básica de ejemplo)
+    const filterForm = document.getElementById('filter-form');
+    filterForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      
+      const brand = document.getElementById('brand').value;
+      const model = document.getElementById('model').value;
+      const price = document.getElementById('price').value;
+
+      alert(`Filtrando autos:\nMarca: ${brand}\nModelo: ${model}\nPrecio máximo: $${price}`);
+    });
+
+    // Chat - Enviar mensaje (simulación)
+    const sendMessageButton = document.getElementById('send-message');
+    sendMessageButton.addEventListener('click', () => {
+      const chatInput = document.getElementById('chat-input');
+      const chatBox = document.getElementById('chat-box');
+      
+      if (chatInput.value) {
+        const newMessage = document.createElement('p');
+        newMessage.innerHTML = `<strong>Tú:</strong> ${chatInput.value}`;
+        chatBox.appendChild(newMessage);
+        chatInput.value = '';  // Limpiar input después de enviar el mensaje
+      }
+    });
+  </script>
+
+</body>
+</html>
