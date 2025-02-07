@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uautos Costa Rica - Compra y Venta de Autos Usados</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+  
+  <!-- Header -->
+  <header class="bg-blue-600 text-white text-center py-4 text-xl font-bold">
+    Uautos Costa Rica - Compra y Venta de Autos Usados
+  </header>
+  
+  <div class="container mx-auto p-4">
+    
+    <!-- Search Filters -->
+    <section class="bg-white p-6 shadow-md rounded-lg mb-6">
+      <h2 class="text-lg font-semibold mb-4">Filtrar Autos</h2>
+      <form class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input type="text" placeholder="Marca (Ej: Toyota)" class="p-2 border rounded">
+        <input type="text" placeholder="Modelo (Ej: Corolla)" class="p-2 border rounded">
+        <input type="number" placeholder="Precio Máximo" class="p-2 border rounded">
+        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded col-span-1 md:col-span-3">Buscar</button>
+      </form>
+    </section>
+    
+    <!-- Premium Ad Payment -->
+    <section class="bg-white p-6 shadow-md rounded-lg mb-6">
+      <h2 class="text-lg font-semibold mb-4">Destaca tu Anuncio</h2>
+      <p class="text-gray-700">Paga por un anuncio premium y obtén más visibilidad.</p>
+      <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mt-4">Pagar Ahora</button>
+    </section>
+    
+    <!-- Security Tips -->
+    <section class="bg-white p-6 shadow-md rounded-lg mb-6">
+      <h2 class="text-lg font-semibold mb-4">Consejos de Seguridad</h2>
+      <ul class="list-disc pl-6 text-gray-700">
+        <li>No compartas información personal sensible.</li>
+        <li>Verifica la identidad del vendedor.</li>
+        <li>Siempre revisa el auto en persona antes de pagar.</li>
+      </ul>
+    </section>
+    
+    <!-- Chat Section -->
+    <section class="bg-white p-6 shadow-md rounded-lg mb-6">
+      <h2 class="text-lg font-semibold mb-4">Chat Seguro</h2>
+      <div id="chat-box" class="border p-4 h-40 overflow-y-scroll mb-4 bg-gray-50">
+        <p><strong>Juan:</strong> ¿Cuándo puedo ver el auto?</p>
+        <p><strong>Ana:</strong> ¿Te queda bien mañana?</p>
+      </div>
+      <input type="text" id="chat-input" class="w-full p-2 border rounded" placeholder="Escribe un mensaje...">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 w-full">Enviar</button>
+    </section>
+  </div>
+  
+</body>
+</html>
